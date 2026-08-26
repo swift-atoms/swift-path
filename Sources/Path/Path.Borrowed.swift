@@ -1,7 +1,7 @@
-#if PATH_PRIMITIVES_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    internal import String_Primitives
-    public import Ownership_Primitives
+    internal import String
+    public import Ownership
 
     extension Path: Ownership.Borrow.`Protocol` {}
 

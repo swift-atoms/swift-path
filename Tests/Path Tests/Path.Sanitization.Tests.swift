@@ -1,4 +1,4 @@
-import Path_Primitives
+import Path
 import Testing
 
 extension Path {

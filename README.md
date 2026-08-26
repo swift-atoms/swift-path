@@ -1,4 +1,4 @@
-# swift-path-primitives
+# swift-path
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
@@ -9,7 +9,7 @@ Lifetime-safe owned and borrowed path types backed by null-terminated, platform-
 ## Quick Start
 
 ```swift
-import Path_Primitives
+import Path
 
 // Convert a Swift String into a scoped, null-terminated path view.
 // `Path.Borrowed` is ~Escapable, so the pointer it wraps cannot outlive the
@@ -46,7 +46,7 @@ let safe = Path.sanitized(from: "Q3 report (final).txt")
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-path-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-path.git", branch: "main")
 ]
 ```
 
@@ -54,7 +54,7 @@ dependencies: [
 .target(
     name: "YourTarget",
     dependencies: [
-        .product(name: "Path Primitives", package: "swift-path-primitives")
+        .product(name: "Path", package: "swift-path")
     ]
 )
 ```
@@ -69,8 +69,8 @@ Two library products.
 
 | Product | When to import |
 |---------|----------------|
-| `Path Primitives` | The `Path` API — owned paths, borrowed views, scoped `String` conversion, and the `Path.Decomposition` / `Path.Modification` view protocols (conformed with separator logic by platform packages). |
-| `Path Primitives Test Support` | Test targets that exercise `Path` values; re-exports the main target alongside the tagged-path test helpers. |
+| `Path` | The `Path` API — owned paths, borrowed views, scoped `String` conversion, and the `Path.Decomposition` / `Path.Modification` view protocols (conformed with separator logic by platform packages). |
+| `Path Test Support` | Test targets that exercise `Path` values; re-exports the main target alongside the tagged-path test helpers. |
 
 ---
 

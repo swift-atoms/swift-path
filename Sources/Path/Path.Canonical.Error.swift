@@ -1,6 +1,6 @@
-#if PATH_PRIMITIVES_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    public import Error_Primitives
+    public import Error
 
     extension Path.Canonical {
 
@@ -8,7 +8,7 @@
 
             case path(Path.Resolution.Error)
 
-            case platform(Error_Primitives.Error)
+            case platform(Error.Error)
         }
     }
 

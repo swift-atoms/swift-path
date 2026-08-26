@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-path-primitives",
+    name: "swift-path",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -13,49 +13,49 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Path Primitives",
-            targets: ["Path Primitives"]
+            name: "Path",
+            targets: ["Path"]
         ),
         .library(
-            name: "Path Primitives Test Support",
-            targets: ["Path Primitives Test Support"]
+            name: "Path Test Support",
+            targets: ["Path Test Support"]
         ),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-string-primitives.git",
+            url: "https://github.com/swift-molecules/swift-string.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-heap.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            url: "https://github.com/swift-molecules/swift-tagged.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-ownership-primitives.git",
+            url: "https://github.com/swift-molecules/swift-ownership.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-error-primitives.git",
+            url: "https://github.com/swift-molecules/swift-error.git",
             branch: "main"
         ),
     ],
     targets: [
         .target(
-            name: "Path Primitives",
+            name: "Path",
             dependencies: [
-                .product(name: "String Primitives", package: "swift-string-primitives"),
-                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
-                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
+                .product(name: "String", package: "swift-string"),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Ownership", package: "swift-ownership"),
+                .product(name: "Error", package: "swift-error"),
             ],
             swiftSettings: [
                 .define(
-                    "PATH_PRIMITIVES_AVAILABLE",
+                    "PATH_AVAILABLE",
                     .when(platforms: [
                         .macOS, .iOS, .tvOS, .watchOS, .visionOS,
                         .linux, .windows, .android, .openbsd,
@@ -64,21 +64,21 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Path Primitives Test Support",
+            name: "Path Test Support",
             dependencies: [
-                "Path Primitives",
+                "Path",
                 .product(
-                    name: "Tagged Primitives Test Support",
-                    package: "swift-tagged-primitives"
+                    name: "Tagged Test Support",
+                    package: "swift-tagged"
                 ),
             ],
             path: "Tests/Support"
         ),
         .testTarget(
-            name: "Path Primitives Tests",
+            name: "Path Tests",
             dependencies: [
-                "Path Primitives",
-                "Path Primitives Test Support",
+                "Path",
+                "Path Test Support",
             ]
         ),
     ],

@@ -1,7 +1,7 @@
-#if PATH_PRIMITIVES_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    public import Tagged_Primitives
-    public import String_Primitives
+    public import Tagged
+    public import String
 
     extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
 
@@ -28,7 +28,7 @@
         }
 
         @inlinable
-        public init(copying view: borrowing String_Primitives.String.Borrowed) {
+        public init(copying view: borrowing String.String.Borrowed) {
             self.init(_unchecked: Path(copying: view))
         }
 

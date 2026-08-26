@@ -1,7 +1,7 @@
-#if PATH_PRIMITIVES_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    public import String_Primitives
-    public import Memory_Heap_Primitives
+    public import String
+    public import Memory_Heap
 
     @safe
     public struct Path: ~Copyable, @unsafe @unchecked Sendable {
@@ -12,9 +12,9 @@
 
     extension Path {
 
-        public typealias Char = String_Primitives.String.Char
+        public typealias Char = String.String.Char
 
-        public typealias Codec = String_Primitives.String.Codec
+        public typealias Codec = String.String.Codec
     }
 
     extension Path {
@@ -23,7 +23,7 @@
         public init(adopting pointer: UnsafeMutablePointer<Char>, count: Int) {
             #if DEBUG
                 precondition(
-                    unsafe pointer[count] == String_Primitives.String.terminator,
+                    unsafe pointer[count] == String.String.terminator,
                     "Path: adopted buffer must be null-terminated"
                 )
             #endif
@@ -34,11 +34,11 @@
         }
 
         @inlinable
-        public init(copying view: borrowing String_Primitives.String.Borrowed) {
+        public init(copying view: borrowing String.String.Borrowed) {
             let length = view.length
             let buffer = UnsafeMutablePointer<Char>.allocate(capacity: length + 1)
             unsafe buffer.initialize(from: view.pointer, count: length)
-            (unsafe buffer)[length] = String_Primitives.String.terminator
+            (unsafe buffer)[length] = String.String.terminator
             unsafe self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(buffer),
                 capacity: Memory.Address.Count(UInt(length) * UInt(MemoryLayout<Char>.stride))
@@ -52,7 +52,7 @@
             for i in 0..<length {
                 (unsafe buffer)[i] = span[i]
             }
-            (unsafe buffer)[length] = String_Primitives.String.terminator
+            (unsafe buffer)[length] = String.String.terminator
             unsafe self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(buffer),
                 capacity: Memory.Address.Count(UInt(length) * UInt(MemoryLayout<Char>.stride))
