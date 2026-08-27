@@ -17,29 +17,21 @@ let package = Package(
             targets: ["Path"]
         ),
         .library(
-            name: "Path Test Support",
-            targets: ["Path Test Support"]
+            name: "Path Standard Library Integration",
+            targets: ["Path Standard Library Integration"]
+        ),
+        .library(
+            name: "Path Apple Foundation Integration",
+            targets: ["Path Apple Foundation Integration"]
         ),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-molecules/swift-string.git",
+            url: "https://github.com/swift-atoms/swift-string.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-heap.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-tagged.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-ownership.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-error.git",
             branch: "main"
         ),
     ],
@@ -49,9 +41,6 @@ let package = Package(
             dependencies: [
                 .product(name: "String", package: "swift-string"),
                 .product(name: "Memory Heap", package: "swift-memory-heap"),
-                .product(name: "Tagged", package: "swift-tagged"),
-                .product(name: "Ownership", package: "swift-ownership"),
-                .product(name: "Error", package: "swift-error"),
             ],
             swiftSettings: [
                 .define(
@@ -64,22 +53,19 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Path Test Support",
+            name: "Path Standard Library Integration",
+            dependencies: ["Path"]
+        ),
+        .target(
+            name: "Path Apple Foundation Integration",
             dependencies: [
                 "Path",
-                .product(
-                    name: "Tagged Test Support",
-                    package: "swift-tagged"
-                ),
-            ],
-            path: "Tests/Support"
+                "Path Standard Library Integration",
+            ]
         ),
         .testTarget(
             name: "Path Tests",
-            dependencies: [
-                "Path",
-                "Path Test Support",
-            ]
+            dependencies: ["Path"]
         ),
     ],
     swiftLanguageModes: [.v6]
