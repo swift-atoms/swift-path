@@ -1,7 +1,11 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
+    public import Cardinal
+    public import Memory
     public import String
-    public import Memory_Heap
+    public import Tagged
+
+    public typealias _CString = String
 
     @safe
     public struct Path: ~Copyable, @unsafe @unchecked Sendable {
@@ -12,9 +16,9 @@
 
     extension Path {
 
-        public typealias Char = String.String.Char
+        public typealias Char = _CString.Char
 
-        public typealias Codec = String.String.Codec
+        public typealias Codec = _CString.Codec
     }
 
     extension Path {
@@ -23,25 +27,25 @@
         public init(adopting pointer: UnsafeMutablePointer<Char>, count: Int) {
             #if DEBUG
                 precondition(
-                    unsafe pointer[count] == String.String.terminator,
+                    unsafe pointer[count] == _CString.terminator,
                     "Path: adopted buffer must be null-terminated"
                 )
             #endif
             unsafe self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(pointer),
-                capacity: Memory.Address.Count(UInt(count) * UInt(MemoryLayout<Char>.stride))
+                capacity: Memory.Address.Count(_unchecked: Cardinal(UInt(count) * UInt(MemoryLayout<Char>.stride)))
             )
         }
 
         @inlinable
-        public init(copying view: borrowing String.String.Borrowed) {
+        public init(copying view: borrowing _CString.Borrowed) {
             let length = view.length
             let buffer = UnsafeMutablePointer<Char>.allocate(capacity: length + 1)
             unsafe buffer.initialize(from: view.pointer, count: length)
-            (unsafe buffer)[length] = String.String.terminator
+            (unsafe buffer)[length] = _CString.terminator
             unsafe self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(buffer),
-                capacity: Memory.Address.Count(UInt(length) * UInt(MemoryLayout<Char>.stride))
+                capacity: Memory.Address.Count(_unchecked: Cardinal(UInt(length) * UInt(MemoryLayout<Char>.stride)))
             )
         }
 
@@ -52,10 +56,10 @@
             for i in 0..<length {
                 (unsafe buffer)[i] = span[i]
             }
-            (unsafe buffer)[length] = String.String.terminator
+            (unsafe buffer)[length] = _CString.terminator
             unsafe self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(buffer),
-                capacity: Memory.Address.Count(UInt(length) * UInt(MemoryLayout<Char>.stride))
+                capacity: Memory.Address.Count(_unchecked: Cardinal(UInt(length) * UInt(MemoryLayout<Char>.stride)))
             )
         }
     }
@@ -71,7 +75,7 @@
 
         @inlinable
         public var count: Int {
-            let byteCapacity = Int(bitPattern: _storage.capacity)
+            let byteCapacity = Int(bitPattern: _storage.capacity.underlying.rawValue)
             return byteCapacity / MemoryLayout<Char>.stride
         }
 
@@ -91,7 +95,7 @@
         public consuming func take() -> (pointer: UnsafeMutablePointer<Char>, count: Int) {
 
             let (raw, byteCapacity) = unsafe _storage.take()
-            let count = Int(bitPattern: byteCapacity)
+            let count = Int(bitPattern: byteCapacity.underlying.rawValue)
             return unsafe (
                 raw.assumingMemoryBound(to: Char.self),
                 count / MemoryLayout<Char>.stride
