@@ -27,7 +27,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-memory-heap.git",
+            url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main"
         ),
         .package(
@@ -48,7 +48,7 @@ let package = Package(
             name: "Path",
             dependencies: [
                 .product(name: "String", package: "swift-string"),
-                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(name: "Memory", package: "swift-memory"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Ownership", package: "swift-ownership"),
                 .product(name: "Error", package: "swift-error"),

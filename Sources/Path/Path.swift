@@ -1,7 +1,7 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
     public import String
-    public import Memory_Heap
+    public import Memory
 
     @safe
     public struct Path: ~Copyable, @unsafe @unchecked Sendable {
