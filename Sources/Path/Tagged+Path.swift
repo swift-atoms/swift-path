@@ -1,7 +1,7 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
     public import Tagged
-    public import String
+    import String
 
     extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
 
@@ -24,17 +24,17 @@
 
         @inlinable
         public init(adopting pointer: UnsafeMutablePointer<Path.Char>, count: Int) {
-            unsafe self.init(_unchecked: Path(adopting: pointer, count: count))
+            unsafe self.init(_unchecked: Path(_storage: <#Memory.Heap#>, adopting: pointer, count: count))
         }
 
         @inlinable
         public init(copying view: borrowing String.String.Borrowed) {
-            self.init(_unchecked: Path(copying: view))
+            self.init(_unchecked: Path(_storage: view))
         }
 
         @inlinable
         public init(_ span: Swift.Span<Path.Char>) {
-            self.init(_unchecked: Path(span))
+            self.init(_unchecked: Path(_storage: span))
         }
     }
 
@@ -50,7 +50,7 @@
         @unsafe
         @inlinable
         public consuming func take() -> (pointer: UnsafeMutablePointer<Path.Char>, count: Int) {
-            unsafe self.map { (p: consuming Path) in unsafe p.take() }.underlying
+            self.map { (p: consuming Path) in unsafe p.take() }.underlying
         }
     }
 

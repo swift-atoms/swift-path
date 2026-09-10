@@ -1,6 +1,6 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    public import String
+    import String
     public import Memory
 
     @safe
@@ -27,7 +27,7 @@
                     "Path: adopted buffer must be null-terminated"
                 )
             #endif
-            unsafe self._storage = Memory.Heap(
+            self._storage = Memory.Heap(
                 adopting: UnsafeMutableRawPointer(pointer),
                 capacity: Memory.Address.Count(UInt(count) * UInt(MemoryLayout<Char>.stride))
             )
@@ -78,7 +78,7 @@
         @inlinable
         public var content: Swift.Span<Char> {
             @_lifetime(borrow self) borrowing get {
-                let s = unsafe Swift.Span(_unsafeStart: _base, count: count)
+                let s = unsafe Swift.Span<<#Element: ~Copyable#>>(_unsafeStart: _base, count: count)
                 return unsafe _overrideLifetime(s, borrowing: self)
             }
         }
