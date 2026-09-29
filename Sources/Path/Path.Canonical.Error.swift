@@ -1,6 +1,8 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
-    import Error
+    public import Error
+
+    public typealias PathPlatformError = Error::Error
 
     extension Path.Canonical {
 
@@ -8,7 +10,7 @@
 
             case path(Path.Resolution.Error)
 
-            case platform(Error.Error)
+            case platform(PathPlatformError)
         }
     }
 

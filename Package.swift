@@ -23,7 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-molecules/swift-string.git",
+            url: "https://github.com/swift-atoms/swift-string.git",
             branch: "main"
         ),
         .package(
@@ -31,11 +31,11 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-tagged.git",
+            url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-ownership.git",
+            url: "https://github.com/swift-atoms/swift-ownership.git",
             branch: "main"
         ),
         .package(
@@ -44,6 +44,23 @@ let package = Package(
         ),
     ],
     targets: [
+        .testTarget(
+            name: "Absorbed swift-path-tagged Tests",
+            dependencies: [
+                .target(name: "Path"),
+                .product(name: "String", package: "swift-string"),
+                .product(name: "Tagged", package: "swift-tagged"),
+            ],
+            path: "Tests/Absorbed swift-path-tagged"
+        ),
+        .testTarget(
+            name: "Absorbed swift-path-error Tests",
+            dependencies: [
+                .target(name: "Path"),
+                .product(name: "Error", package: "swift-error"),
+            ],
+            path: "Tests/Absorbed swift-path-error"
+        ),
         .target(
             name: "Path",
             dependencies: [
@@ -77,6 +94,7 @@ let package = Package(
         .testTarget(
             name: "Path Tests",
             dependencies: [
+                .product(name: "Ownership", package: "swift-ownership"),
                 "Path",
                 "Path Test Support",
             ]

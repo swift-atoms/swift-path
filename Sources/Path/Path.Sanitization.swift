@@ -1,3 +1,4 @@
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 extension Path {
 
     public static func sanitized(from source: Swift.String) -> Swift.String {
@@ -15,3 +16,5 @@ extension Path {
         return sanitized
     }
 }
+
+#endif
