@@ -6,7 +6,7 @@
 
     extension Path.Canonical {
 
-        public enum Error: Swift.Error, Sendable {
+        public enum Error: Swift::Error, Sendable {
 
             case path(Path.Resolution.Error)
 
@@ -27,7 +27,7 @@
 
     extension Path.Canonical.Error: CustomStringConvertible {
 
-        public var description: Swift.String {
+        public var description: Swift::String {
             switch self {
             case .path(let e): return "path canonicalization: \(e)"
             case .platform(let e): return "path canonicalization: \(e)"

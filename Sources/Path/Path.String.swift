@@ -12,7 +12,7 @@
 
     extension Path.String {
 
-        public enum Error<Body: Swift.Error>: Swift.Error {
+        public enum Error<Body: Swift::Error>: Swift::Error {
 
             case conversion(Conversion.Error)
 
@@ -22,7 +22,7 @@
 
     extension Path.String.Conversion {
 
-        public enum Error: Swift.Error, Sendable, Equatable {
+        public enum Error: Swift::Error, Sendable, Equatable {
 
             case interiorNUL(index: Int)
         }
@@ -47,7 +47,7 @@
         }
 
         @inlinable
-        public func mapBody<NewBody: Swift.Error>(
+        public func mapBody<NewBody: Swift::Error>(
             _ transform: (Body) -> NewBody
         ) -> Path.String.Error<NewBody> {
             switch self {
@@ -76,7 +76,7 @@
 
         @_disfavoredOverload
         @inlinable
-        public func callAsFunction<S: StringProtocol, E: Swift.Error, R: ~Copyable>(
+        public func callAsFunction<S: StringProtocol, E: Swift::Error, R: ~Copyable>(
             _ string: S,
             _ body: (borrowing Path.Borrowed) throws(E) -> R
         ) throws(Path.String.Error<E>) -> R {
@@ -97,7 +97,7 @@
         }
 
         @inlinable
-        public func callAsFunction<S: StringProtocol, NestedBody: Swift.Error, R: ~Copyable>(
+        public func callAsFunction<S: StringProtocol, NestedBody: Swift::Error, R: ~Copyable>(
             _ string: S,
             _ body: (borrowing Path.Borrowed) throws(Path.String.Error<NestedBody>) -> R
         ) throws(Path.String.Error<NestedBody>) -> R {
@@ -131,7 +131,7 @@
         public func callAsFunction<
             S1: StringProtocol,
             S2: StringProtocol,
-            E: Swift.Error,
+            E: Swift::Error,
             R: ~Copyable
         >(
             _ string1: S1,
@@ -187,7 +187,7 @@
             S1: StringProtocol,
             S2: StringProtocol,
             S3: StringProtocol,
-            E: Swift.Error,
+            E: Swift::Error,
             R: ~Copyable
         >(
             _ string1: S1,
@@ -275,7 +275,7 @@
         @_disfavoredOverload
         @inlinable
         @unsafe
-        public func callAsFunction<S: StringProtocol, E: Swift.Error, R: ~Copyable>(
+        public func callAsFunction<S: StringProtocol, E: Swift::Error, R: ~Copyable>(
             _ strings: [S],
             _ body: (UnsafePointer<UnsafePointer<Path.Char>?>) throws(E) -> R
         ) throws(Path.String.Error<E>) -> R {
@@ -313,7 +313,7 @@
 
         @inlinable
         @unsafe
-        public func callAsFunction<S: StringProtocol, E: Swift.Error, R: ~Copyable>(
+        public func callAsFunction<S: StringProtocol, E: Swift::Error, R: ~Copyable>(
             _ strings: [S],
             _ body: (UnsafePointer<UnsafePointer<Path.Char>?>) throws(Path.String.Error<E>) -> R
         ) throws(Path.String.Error<E>) -> R {
@@ -383,7 +383,7 @@
         public func callAsFunction<
             S1: StringProtocol,
             S2: StringProtocol,
-            E: Swift.Error,
+            E: Swift::Error,
             R: ~Copyable
         >(
             _ strings1: [S1],
@@ -458,7 +458,7 @@
         public func callAsFunction<
             S1: StringProtocol,
             S2: StringProtocol,
-            E: Swift.Error,
+            E: Swift::Error,
             R: ~Copyable
         >(
             _ strings1: [S1],
@@ -588,7 +588,7 @@
         index: Int,
         count: inout Int
     ) throws(Path.String.Conversion.Error) -> UnsafeMutablePointer<Path.Char> {
-        let s = Swift.String(string)
+        let s = Swift::String(string)
 
         var measured = 0
         for scalar in s.unicodeScalars {

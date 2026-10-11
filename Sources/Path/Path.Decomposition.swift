@@ -7,23 +7,23 @@
             associatedtype Char
 
             @_lifetime(copy view)
-            static func parent(of view: borrowing Self) -> Swift.Span<Char>?
+            static func parent(of view: borrowing Self) -> Swift::Span<Char>?
 
             @_lifetime(copy view)
-            static func component(of view: borrowing Self) -> Swift.Span<Char>
+            static func component(of view: borrowing Self) -> Swift::Span<Char>
         }
     }
 
     extension Path.Decomposition where Self: ~Copyable, Self: ~Escapable {
 
         @inlinable
-        public var parent: Swift.Span<Char>? {
+        public var parent: Swift::Span<Char>? {
             @_lifetime(copy self)
             borrowing get { Self.parent(of: self) }
         }
 
         @inlinable
-        public var component: Swift.Span<Char> {
+        public var component: Swift::Span<Char> {
             @_lifetime(copy self)
             borrowing get { Self.component(of: self) }
         }

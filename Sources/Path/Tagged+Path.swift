@@ -33,7 +33,7 @@
         }
 
         @inlinable
-        public init(_ span: Swift.Span<Path.Char>) {
+        public init(_ span: Swift::Span<Path.Char>) {
             self.init(_unchecked: Path(span))
         }
     }

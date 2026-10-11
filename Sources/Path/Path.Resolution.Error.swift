@@ -2,7 +2,7 @@
 
     extension Path.Resolution {
 
-        public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+        public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
             case notFound
 
@@ -24,7 +24,7 @@
 
     extension Path.Resolution.Error: CustomStringConvertible {
 
-        public var description: Swift.String {
+        public var description: Swift::String {
             switch self {
             case .notFound: return "not found"
             case .exists: return "already exists"

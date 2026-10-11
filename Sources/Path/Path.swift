@@ -46,7 +46,7 @@
         }
 
         @inlinable
-        public init(_ span: Swift.Span<Char>) {
+        public init(_ span: Swift::Span<Char>) {
             let length = span.count
             let buffer = UnsafeMutablePointer<Char>.allocate(capacity: length + 1)
             for i in 0..<length {
@@ -76,9 +76,9 @@
         }
 
         @inlinable
-        public var content: Swift.Span<Char> {
+        public var content: Swift::Span<Char> {
             @_lifetime(borrow self) borrowing get {
-                let s = unsafe Swift.Span<Char>(_unsafeStart: _base, count: count)
+                let s = unsafe Swift::Span<Char>(_unsafeStart: _base, count: count)
                 return unsafe _overrideLifetime(s, borrowing: self)
             }
         }
@@ -101,7 +101,7 @@
 
     extension Path {
 
-        public enum ConversionError: Swift.Error, Sendable, Equatable {
+        public enum ConversionError: Swift::Error, Sendable, Equatable {
 
             case interiorNUL
         }

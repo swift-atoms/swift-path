@@ -9,7 +9,7 @@
 
         @inlinable
         public static func lastSeparatorIndex(
-            in bytes: Swift.Span<Path.Char>,
+            in bytes: Swift::Span<Path.Char>,
             primary: Path.Char,
             alt: Path.Char? = nil
         ) -> Int? {

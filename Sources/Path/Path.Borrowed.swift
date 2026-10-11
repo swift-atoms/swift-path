@@ -55,14 +55,14 @@
 
         @unsafe
         @inlinable
-        public borrowing func withUnsafePointer<R: ~Copyable, E: Swift.Error>(
+        public borrowing func withUnsafePointer<R: ~Copyable, E: Swift::Error>(
             _ body: (UnsafePointer<Path.Char>) throws(E) -> R
         ) throws(E) -> R {
             try unsafe body(pointer)
         }
 
         @inlinable
-        public var span: Swift.Span<Path.Char> {
+        public var span: Swift::Span<Path.Char> {
             @_lifetime(copy self) borrowing get {
                 let span = unsafe Span(_unsafeStart: pointer, count: count)
                 return unsafe _overrideLifetime(span, copying: self)

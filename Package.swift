@@ -83,7 +83,7 @@ let package = Package(
         .target(
             name: "Path Test Support",
             dependencies: [
-                "Path",
+                .target(name: "Path"),
                 .product(
                     name: "Tagged Test Support",
                     package: "swift-tagged"
@@ -95,8 +95,8 @@ let package = Package(
             name: "Path Tests",
             dependencies: [
                 .product(name: "Ownership", package: "swift-ownership"),
-                "Path",
-                "Path Test Support",
+                .target(name: "Path"),
+                .target(name: "Path Test Support"),
             ]
         ),
     ],
