@@ -27,7 +27,7 @@
                     "Path: adopted buffer must be null-terminated"
                 )
             #endif
-            self._storage = Memory.Heap(
+            self._storage = unsafe Memory.Heap(
                 adopting: UnsafeMutableRawPointer(pointer),
                 capacity: Memory.Address.Count(_unchecked: .init(UInt(count) * UInt(MemoryLayout<Char>.stride)))
             )
