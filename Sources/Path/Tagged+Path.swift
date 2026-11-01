@@ -5,7 +5,7 @@
 
     extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
 
-        public typealias ConversionError = Path.ConversionError
+        public typealias Error = Path.Error
 
         public typealias String = Path.String
 
@@ -23,11 +23,6 @@
     extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
 
         @inlinable
-        public init(adopting pointer: UnsafeMutablePointer<Path.Char>, count: Int) {
-            unsafe self.init(_unchecked: Path(adopting: pointer, count: count))
-        }
-
-        @inlinable
         public init(copying view: borrowing String::String.Borrowed) {
             self.init(_unchecked: Path(copying: view))
         }
@@ -36,21 +31,30 @@
         public init(_ span: Swift::Span<Path.Char>) {
             self.init(_unchecked: Path(span))
         }
+
+        @inlinable
+        public var count: Int { underlying.count }
     }
 
-    extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
+    extension Tagged where Underlying == Path.Unique, Tag: ~Copyable & ~Escapable {
+
+        @inlinable
+        public init(adopting pointer: UnsafeMutablePointer<Path.Char>, count: Int) {
+            unsafe self.init(_unchecked: Path.Unique(adopting: pointer, count: count))
+        }
+
+        @inlinable
+        public init(copying view: borrowing String::String.Borrowed) {
+            self.init(_unchecked: Path.Unique(copying: view))
+        }
 
         @inlinable
         public var count: Int { underlying.count }
 
-    }
-
-    extension Tagged where Underlying == Path, Tag: ~Copyable & ~Escapable {
-
         @unsafe
         @inlinable
         public consuming func take() -> (pointer: UnsafeMutablePointer<Path.Char>, count: Int) {
-            unsafe self.map { (p: consuming Path) in unsafe p.take() }.underlying
+            unsafe self.map { (path: consuming Path.Unique) in unsafe path.take() }.underlying
         }
     }
 

@@ -19,7 +19,7 @@
 
         @Test
         func `tagged namespace forwards Path namespaces`() {
-            let _: Tagged<TestTag, Path>.ConversionError.Type = Path.ConversionError.self
+            let _: Tagged<TestTag, Path>.Error.Type = Path.Error.self
             let _: Tagged<TestTag, Path>.String.Type = Path.String.self
             let _: Tagged<TestTag, Path>.Resolution.Type = Path.Resolution.self
             let _: Tagged<TestTag, Path>.Canonical.Type = Path.Canonical.self
@@ -29,7 +29,7 @@
         @Test
         func `take transfers the tagged path buffer`() {
             let string = String(ascii: "path")
-            let path = Tagged<TestTag, Path>(copying: string.view)
+            let path = Tagged<TestTag, Path.Unique>(copying: string.view)
             let (pointer, count) = unsafe path.take()
             defer { unsafe pointer.deallocate() }
 

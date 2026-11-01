@@ -87,7 +87,7 @@
             } catch {
                 throw .conversion(error)
             }
-            let path = unsafe Path(adopting: buffer, count: count)
+            let path = unsafe Path.Unique(adopting: buffer, count: count)
             let view = path.view
             do throws(E) {
                 return try body(view)
@@ -108,7 +108,7 @@
             } catch {
                 throw .conversion(error)
             }
-            let path = unsafe Path(adopting: buffer, count: count)
+            let path = unsafe Path.Unique(adopting: buffer, count: count)
             return try body(path.view)
         }
 
@@ -119,7 +119,7 @@
         ) throws(Path.String.Conversion.Error) -> R {
             var count = 0
             let buffer = try unsafe _allocateBuffer(string, index: 0, count: &count)
-            let path = unsafe Path(adopting: buffer, count: count)
+            let path = unsafe Path.Unique(adopting: buffer, count: count)
             return body(path.view)
         }
     }
@@ -147,13 +147,13 @@
             } catch {
                 throw .conversion(error)
             }
-            let path1 = unsafe Path(adopting: buffer1, count: count1)
+            let path1 = unsafe Path.Unique(adopting: buffer1, count: count1)
             do throws(Path.String.Conversion.Error) {
                 try unsafe (buffer2 = _allocateBuffer(string2, index: 1, count: &count2))
             } catch {
                 throw .conversion(error)
             }
-            let path2 = unsafe Path(adopting: buffer2, count: count2)
+            let path2 = unsafe Path.Unique(adopting: buffer2, count: count2)
             let view1 = path1.view
             let view2 = path2.view
             do throws(E) {
@@ -172,9 +172,9 @@
             var count1 = 0
             var count2 = 0
             let buffer1 = try unsafe _allocateBuffer(string1, index: 0, count: &count1)
-            let path1 = unsafe Path(adopting: buffer1, count: count1)
+            let path1 = unsafe Path.Unique(adopting: buffer1, count: count1)
             let buffer2 = try unsafe _allocateBuffer(string2, index: 1, count: &count2)
-            let path2 = unsafe Path(adopting: buffer2, count: count2)
+            let path2 = unsafe Path.Unique(adopting: buffer2, count: count2)
             return body(path1.view, path2.view)
         }
     }
@@ -207,19 +207,19 @@
             } catch {
                 throw .conversion(error)
             }
-            let path1 = unsafe Path(adopting: buffer1, count: count1)
+            let path1 = unsafe Path.Unique(adopting: buffer1, count: count1)
             do throws(Path.String.Conversion.Error) {
                 try unsafe (buffer2 = _allocateBuffer(string2, index: 1, count: &count2))
             } catch {
                 throw .conversion(error)
             }
-            let path2 = unsafe Path(adopting: buffer2, count: count2)
+            let path2 = unsafe Path.Unique(adopting: buffer2, count: count2)
             do throws(Path.String.Conversion.Error) {
                 try unsafe (buffer3 = _allocateBuffer(string3, index: 2, count: &count3))
             } catch {
                 throw .conversion(error)
             }
-            let path3 = unsafe Path(adopting: buffer3, count: count3)
+            let path3 = unsafe Path.Unique(adopting: buffer3, count: count3)
             let view1 = path1.view
             let view2 = path2.view
             let view3 = path3.view
@@ -246,11 +246,11 @@
             var count2 = 0
             var count3 = 0
             let buffer1 = try unsafe _allocateBuffer(string1, index: 0, count: &count1)
-            let path1 = unsafe Path(adopting: buffer1, count: count1)
+            let path1 = unsafe Path.Unique(adopting: buffer1, count: count1)
             let buffer2 = try unsafe _allocateBuffer(string2, index: 1, count: &count2)
-            let path2 = unsafe Path(adopting: buffer2, count: count2)
+            let path2 = unsafe Path.Unique(adopting: buffer2, count: count2)
             let buffer3 = try unsafe _allocateBuffer(string3, index: 2, count: &count3)
-            let path3 = unsafe Path(adopting: buffer3, count: count3)
+            let path3 = unsafe Path.Unique(adopting: buffer3, count: count3)
             return body(path1.view, path2.view, path3.view)
         }
     }

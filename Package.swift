@@ -17,6 +17,10 @@ let package = Package(
             targets: ["Path"]
         ),
         .library(
+            name: "Path Foundation Integration",
+            targets: ["Path Foundation Integration"]
+        ),
+        .library(
             name: "Path Test Support",
             targets: ["Path Test Support"]
         ),
@@ -27,8 +31,9 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-memory.git",
-            branch: "main"
+            url: "https://github.com/swift-atoms/swift-binary.git",
+            branch: "main",
+            traits: ["Serializer"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-tagged.git",
@@ -65,7 +70,7 @@ let package = Package(
             name: "Path",
             dependencies: [
                 .product(name: "String", package: "swift-string"),
-                .product(name: "Memory", package: "swift-memory"),
+                .product(name: "Binary", package: "swift-binary"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Ownership", package: "swift-ownership"),
                 .product(name: "Error", package: "swift-error"),
@@ -79,6 +84,14 @@ let package = Package(
                     ])
                 )
             ]
+        ),
+        .target(
+            name: "Path Foundation Integration",
+            dependencies: [.target(name: "Path")]
+        ),
+        .testTarget(
+            name: "Path Foundation Integration Tests",
+            dependencies: [.target(name: "Path Foundation Integration")]
         ),
         .target(
             name: "Path Test Support",

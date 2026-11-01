@@ -70,15 +70,4 @@
         }
     }
 
-    extension Path {
-
-        @inlinable
-        public var view: Borrowed {
-            @_lifetime(borrow self) borrowing get {
-                let view = unsafe Borrowed(_base, count: count)
-                return unsafe _overrideLifetime(view, borrowing: self)
-            }
-        }
-    }
-
 #endif

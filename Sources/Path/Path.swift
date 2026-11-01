@@ -1,13 +1,19 @@
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
     public import String
-    public import Memory
 
+    /// A path: platform code units, NUL-terminated, with no interior NUL.
+    ///
+    /// `Path` is the default conformer of ``Path/Protocol``: copyable, hashable and sendable, on one
+    /// tail-allocated block, so a copy is a retain. ``Path/Unique`` is the single-owner store and
+    /// ``Path/Small`` the inline one. What the separators mean is the platform's grammar, which
+    /// swift-iso-9945 and swift-windows-32 add.
+    @frozen
     @safe
-    public struct Path: ~Copyable, @unsafe @unchecked Sendable {
+    public struct Path: @unchecked Sendable {
 
         @usableFromInline
-        internal let _storage: Memory.Heap
+        internal let _storage: ManagedBuffer<Int, Char>
     }
 
     extension Path {
@@ -17,93 +23,41 @@
         public typealias Codec = String::String.Codec
     }
 
-    extension Path {
+    extension Path: Path.`Protocol` {
 
         @inlinable
-        public init(adopting pointer: UnsafeMutablePointer<Char>, count: Int) {
-            #if DEBUG
-                precondition(
-                    unsafe pointer[count] == String::String.terminator,
-                    "Path: adopted buffer must be null-terminated"
-                )
-            #endif
-            self._storage = unsafe Memory.Heap(
-                adopting: UnsafeMutableRawPointer(pointer),
-                capacity: Memory.Address.Count(_unchecked: .init(UInt(count) * UInt(MemoryLayout<Char>.stride)))
-            )
-        }
-
-        @inlinable
-        public init(copying view: borrowing String::String.Borrowed) {
-            let length = view.length
-            let buffer = UnsafeMutablePointer<Char>.allocate(capacity: length + 1)
-            unsafe buffer.initialize(from: view.pointer, count: length)
-            (unsafe buffer)[length] = String::String.terminator
-            unsafe self._storage = Memory.Heap(
-                adopting: UnsafeMutableRawPointer(buffer),
-                capacity: Memory.Address.Count(_unchecked: .init(UInt(length) * UInt(MemoryLayout<Char>.stride)))
-            )
-        }
-
-        @inlinable
-        public init(_ span: Swift::Span<Char>) {
-            let length = span.count
-            let buffer = UnsafeMutablePointer<Char>.allocate(capacity: length + 1)
-            for i in 0..<length {
-                (unsafe buffer)[i] = span[i]
+        public init(count: Int, initializingWith body: (UnsafeMutablePointer<Char>) -> Void) {
+            let storage = ManagedBuffer<Int, Char>.create(minimumCapacity: count + 1) { _ in count }
+            unsafe storage.withUnsafeMutablePointerToElements { base in
+                unsafe body(base)
+                unsafe base[count] = String::String.terminator
             }
-            (unsafe buffer)[length] = String::String.terminator
-            unsafe self._storage = Memory.Heap(
-                adopting: UnsafeMutableRawPointer(buffer),
-                capacity: Memory.Address.Count(_unchecked: .init(UInt(length) * UInt(MemoryLayout<Char>.stride)))
-            )
-        }
-    }
-
-    extension Path {
-
-        @unsafe
-        @inlinable
-        package var _base: UnsafePointer<Char> {
-
-            unsafe UnsafePointer(_storage.unsafeBaseAddress.assumingMemoryBound(to: Char.self))
+            self._storage = storage
         }
 
         @inlinable
-        public var count: Int {
-            let byteCapacity = Int(bitPattern: _storage.capacity.underlying.rawValue)
-            return byteCapacity / MemoryLayout<Char>.stride
-        }
+        public var count: Int { _storage.header }
 
         @inlinable
-        public var content: Swift::Span<Char> {
+        public var view: Borrowed {
             @_lifetime(borrow self) borrowing get {
-                let s = unsafe Swift::Span<Char>(_unsafeStart: _base, count: count)
-                return unsafe _overrideLifetime(s, borrowing: self)
+                let base = unsafe _storage.withUnsafeMutablePointerToElements { unsafe UnsafePointer($0) }
+                let view = unsafe Borrowed(base, count: _storage.header)
+                return unsafe _overrideLifetime(view, borrowing: self)
             }
         }
     }
 
-    extension Path {
+    extension Path: Hashable {
 
-        @unsafe
         @inlinable
-        public consuming func take() -> (pointer: UnsafeMutablePointer<Char>, count: Int) {
-
-            let (raw, byteCapacity) = unsafe _storage.take()
-            let count = Int(bitPattern: byteCapacity.underlying.rawValue)
-            return unsafe (
-                raw.assumingMemoryBound(to: Char.self),
-                count / MemoryLayout<Char>.stride
-            )
+        public static func == (lhs: Path, rhs: Path) -> Bool {
+            lhs._storage === rhs._storage || lhs.isEqual(to: rhs)
         }
-    }
 
-    extension Path {
-
-        public enum ConversionError: Swift::Error, Sendable, Equatable {
-
-            case interiorNUL
+        @inlinable
+        public func hash(into hasher: inout Hasher) {
+            hashCodeUnits(into: &hasher)
         }
     }
 
