@@ -1,10 +1,14 @@
-public import Foundation
-public import Path
+#if canImport(Foundation)
 
-extension Foundation.URL {
+    public import Foundation
+    public import Path
 
-    /// The file URL of `path`.
-    public init(_ path: Path) {
-        self.init(filePath: path.string)
+    extension Foundation.URL {
+
+        /// The file URL of `path`.
+        public init(_ path: Path) {
+            self.init(filePath: path.string)
+        }
     }
-}
+
+#endif

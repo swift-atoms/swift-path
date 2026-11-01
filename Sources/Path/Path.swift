@@ -23,7 +23,7 @@
         public typealias Codec = String::String.Codec
     }
 
-    extension Path: Path.`Protocol` {
+    extension Path: _PathProtocol {
 
         @inlinable
         public init(count: Int, initializingWith body: (UnsafeMutablePointer<Char>) -> Void) {

@@ -24,7 +24,7 @@
         }
     }
 
-    extension Path.`Protocol` where Self: ~Copyable {
+    extension _PathProtocol where Self: ~Copyable {
 
         /// The path that `string` spells, in platform code units.
         ///
@@ -66,7 +66,7 @@
 
         /// The text of `path`.
         @inlinable
-        public init<P: Path.`Protocol` & ~Copyable>(_ path: borrowing P) {
+        public init<P: _PathProtocol & ~Copyable>(_ path: borrowing P) {
             self = path.string
         }
     }
@@ -82,7 +82,7 @@
 
         @inlinable
         public init(stringLiteral value: Swift::String) {
-            do {
+            do throws(Path.Error) {
                 try self.init(value)
             } catch {
                 fatalError("Invalid path literal: \(value) (\(error))")

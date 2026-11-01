@@ -37,7 +37,7 @@
         }
     }
 
-    extension Path.Unique: Path.`Protocol` {
+    extension Path.Unique: _PathProtocol {
 
         @inlinable
         public init(count: Int, initializingWith body: (UnsafeMutablePointer<Path.Char>) -> Void) {

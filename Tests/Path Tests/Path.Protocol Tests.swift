@@ -39,7 +39,11 @@ import Testing
             let view = path.view
             #expect(view.count == path.count)
             #expect(unsafe view.pointer[view.count] == 0)
-            #expect(path.count == "/tmp/é".utf8.count)
+            #if os(Windows)
+                #expect(path.count == "/tmp/é".utf16.count)
+            #else
+                #expect(path.count == "/tmp/é".utf8.count)
+            #endif
         }
 
         @Test
