@@ -26,15 +26,16 @@
 
     extension _PathProtocol where Self: ~Copyable {
 
-        /// The path that `string` spells, in platform code units.
+        /// The code units that `string` encodes, unchanged.
         ///
         /// Text is held to more than the type's invariant: besides being non-empty and free of NUL,
         /// it may not contain control characters (U+0000–U+001F and U+007F). A path the system hands
         /// back, from `readdir` or `readlink`, may; build those from their code units instead.
         ///
-        /// On Windows, `/` in text becomes `\`, so a path holds the platform's own separator.
+        /// Separators are not interpreted: that is the platform grammar's work. Its `init(_:)`,
+        /// in swift-iso-9945 or swift-windows-32, is the entry point for text.
         @inlinable
-        public init(_ string: Swift::String) throws(Path.Error) {
+        public init(validating string: Swift::String) throws(Path.Error) {
             guard !string.isEmpty else { throw .empty }
             var count = 0
             for scalar in string.unicodeScalars {
@@ -49,11 +50,7 @@
                 for scalar in string.unicodeScalars {
                     guard let units = Path.Codec.encode(scalar) else { continue }
                     for unit in units {
-                        #if os(Windows)
-                            unsafe base[index] = unit == 0x2F ? 0x5C : unit
-                        #else
-                            unsafe base[index] = unit
-                        #endif
+                        unsafe base[index] = unit
                         index += 1
                     }
                 }
@@ -82,18 +79,6 @@
         public var description: Swift::String { string }
 
         public var debugDescription: Swift::String { "Path(\"\(string)\")" }
-    }
-
-    extension Path: ExpressibleByStringLiteral {
-
-        @inlinable
-        public init(stringLiteral value: Swift::String) {
-            do throws(Path.Error) {
-                try self.init(value)
-            } catch {
-                fatalError("Invalid path literal: \(value) (\(error))")
-            }
-        }
     }
 
 #endif

@@ -8,10 +8,10 @@ import Testing
 
         @Test
         func `text round-trips through every store`() throws {
-            let shared = try Path(Swift.String("/tmp/a b"))
-            let unique = try Path.Unique("/tmp/a b")
-            let small = try Path.Small<256>("/tmp/a b")
-            let spilled = try Path.Small<4>("/tmp/a b")
+            let shared = try Path(validating: "/tmp/a b")
+            let unique = try Path.Unique(validating: "/tmp/a b")
+            let small = try Path.Small<256>(validating: "/tmp/a b")
+            let spilled = try Path.Small<4>(validating: "/tmp/a b")
             #expect(shared.string == "/tmp/a b")
             #expect(unique.string == "/tmp/a b")
             #expect(small.string == "/tmp/a b")
@@ -19,8 +19,7 @@ import Testing
         }
 
         @Test
-        func `text rejects empty, NUL and control characters`() {
-            // `Path("…")` with a literal is a literal coercion, which traps; text from a value throws.
+        func `text rejects empty, NUL and control characters`() throws {
             let texts: [(Swift.String, Path.Error)] = [
                 ("", .empty),
                 ("a\u{0}b", .containsInteriorNUL),
@@ -28,14 +27,14 @@ import Testing
                 ("a\u{7F}", .containsControlCharacters),
             ]
             for (text, error) in texts {
-                #expect(throws: error) { _ = try Path(text) }
-                #expect(throws: error) { _ = try Path.Unique(text).count }
+                #expect(throws: error) { _ = try Path(validating: text) }
+                #expect(throws: error) { _ = try Path.Unique(validating: text).count }
             }
         }
 
         @Test
         func `the view is NUL-terminated and counts code units`() throws {
-            let path: Path = "/tmp/é"
+            let path = try Path(validating: "/tmp/é")
             let view = path.view
             #expect(view.count == path.count)
             #expect(unsafe view.pointer[view.count] == 0)
@@ -48,34 +47,35 @@ import Testing
 
         @Test
         func `a copy shares its storage and compares equal`() throws {
-            let a: Path = "/usr/lib"
+            let a = try Path(validating: "/usr/lib")
             let b = a
             #expect(a == b)
             #expect(a.hashValue == b.hashValue)
-            #expect(Set([a, b, "/usr/lib"]).count == 1)
-            #expect(a != "/usr/libx")
+            let again = try Path(validating: "/usr/lib")
+            #expect(Set([a, b, again]).count == 1)
+            #expect(a.string != "/usr/libx")
         }
 
         @Test
         func `joining puts the separator between, when one is given`() throws {
-            let a: Path = "/usr"
-            let b: Path = "lib"
-            #expect(Path.joining(a.view, separator: 0x2F, b.view) == "/usr/lib")
-            #expect(Path.joining(a.view, separator: nil, b.view) == "/usrlib")
+            let a = try Path(validating: "/usr")
+            let b = try Path(validating: "lib")
+            #expect(Path.joining(a.view, separator: 0x2F, b.view).string == "/usr/lib")
+            #expect(Path.joining(a.view, separator: nil, b.view).string == "/usrlib")
         }
 
         @Test
-        func `prefix and suffix copy code units`() {
-            let path: Path = "/usr/lib"
-            #expect(path.prefix(4) == "/usr")
-            #expect(path.suffix(from: 5) == "lib")
+        func `prefix and suffix copy code units`() throws {
+            let path = try Path(validating: "/usr/lib")
+            #expect(path.prefix(4).string == "/usr")
+            #expect(path.suffix(from: 5).string == "lib")
         }
 
         @Test
         func `isEqual compares across stores`() throws {
-            let shared: Path = "/a/b"
-            let unique = try Path.Unique("/a/b")
-            let small = try Path.Small<8>("/a/b")
+            let shared = try Path(validating: "/a/b")
+            let unique = try Path.Unique(validating: "/a/b")
+            let small = try Path.Small<8>(validating: "/a/b")
             let sharedUnique = shared.isEqual(to: unique)
             let uniqueSmall = unique.isEqual(to: small)
             let smallShared = small.isEqual(to: shared)
@@ -90,8 +90,8 @@ import Testing
 
         @Test
         func `push grows the buffer and truncate keeps it`() throws {
-            var path = try Path.Unique("/root")
-            let name: Path = "child"
+            var path = try Path.Unique(validating: "/root")
+            let name = try Path(validating: "child")
             path.push(name.view, separator: 0x2F)
             #expect(path.string == "/root/child")
             #expect(unsafe path.view.pointer[path.count] == 0)
@@ -104,13 +104,13 @@ import Testing
 
         @Test
         func `take hands the buffer back, and adopting takes it again`() throws {
-            let path = try Path.Unique("/x")
+            let path = try Path.Unique(validating: "/x")
             let (pointer, count) = unsafe path.take()
             #expect(count == 2)
             let again = unsafe Path.Unique(adopting: pointer, count: count)
             #expect(again.string == "/x")
             let shared = again.shared()
-            #expect(shared == "/x")
+            #expect(shared.string == "/x")
         }
     }
 
@@ -119,22 +119,22 @@ import Testing
 
         @Test
         func `short paths stay inline, long ones spill`() throws {
-            let short = try Path.Small<8>("/a/b")
-            let long = try Path.Small<8>("/a/b/c/d/e")
+            let short = try Path.Small<8>(validating: "/a/b")
+            let long = try Path.Small<8>(validating: "/a/b/c/d/e")
             #expect(short.count == 4)
             #expect(long.count == 10)
             #expect(unsafe short.view.pointer[short.count] == 0)
             #expect(unsafe long.view.pointer[long.count] == 0)
-            let shortAgain = try Path.Small<8>("/a/b")
-            let longAgain = try Path.Small<8>("/a/b/c/d/e")
+            let shortAgain = try Path.Small<8>(validating: "/a/b")
+            let longAgain = try Path.Small<8>(validating: "/a/b/c/d/e")
             #expect(short == shortAgain)
             #expect(long == longAgain)
         }
 
         @Test
         func `a path one short of capacity is inline; at capacity it spills`() throws {
-            let inline = try Path.Small<4>("abc")
-            let spilled = try Path.Small<4>("abcd")
+            let inline = try Path.Small<4>(validating: "abc")
+            let spilled = try Path.Small<4>(validating: "abcd")
             #expect(inline.string == "abc")
             #expect(spilled.string == "abcd")
         }
