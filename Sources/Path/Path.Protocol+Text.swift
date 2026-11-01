@@ -31,6 +31,8 @@
         /// Text is held to more than the type's invariant: besides being non-empty and free of NUL,
         /// it may not contain control characters (U+0000–U+001F and U+007F). A path the system hands
         /// back, from `readdir` or `readlink`, may; build those from their code units instead.
+        ///
+        /// On Windows, `/` in text becomes `\`, so a path holds the platform's own separator.
         @inlinable
         public init(_ string: Swift::String) throws(Path.Error) {
             guard !string.isEmpty else { throw .empty }
@@ -47,7 +49,11 @@
                 for scalar in string.unicodeScalars {
                     guard let units = Path.Codec.encode(scalar) else { continue }
                     for unit in units {
-                        unsafe base[index] = unit
+                        #if os(Windows)
+                            unsafe base[index] = unit == 0x2F ? 0x5C : unit
+                        #else
+                            unsafe base[index] = unit
+                        #endif
                         index += 1
                     }
                 }
