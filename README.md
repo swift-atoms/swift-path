@@ -6,7 +6,7 @@ Use this package when you need to hold a file-system path as the platform's own 
 
 - A path is a sequence of code units followed by a NUL: UTF-8 everywhere except Windows, where it is UTF-16. `count` counts code units, not characters, and never includes the NUL.
 - This package never reads separators. `init(validating:)` stores the code units of the text exactly as given, and `joining(_:separator:_:)` and `Path.Unique.push(_:separator:)` insert only the separator the caller passes, or none for `nil`.
-- `init(validating:)` rejects text that is empty, contains U+0000, or contains a control character (U+0001–U+001F or U+007F). Paths the system returns may contain control characters. Build those from their code units, not from text.
+- `init(validating:)` rejects text that is empty, contains U+0000, or contains a control character (U+0001 to U+001F or U+007F). Paths the system returns may contain control characters. Build those from their code units, not from text.
 - `Path.String.Scope` (`Path.scope`) rejects only interior NULs. Its `index` is the string's position among the arguments, and for two arrays the second array's positions continue after the first. Its buffers exist only while the closure runs.
 - `string` decodes the code units. Units that are invalid in the platform's encoding become U+FFFD, so converting a path to text and back is lossless only for paths that are valid text. `Path`'s binary serialization is the UTF-8 of `string`, so it is just as lossy.
 - Equality and hashing compare code units. They do no normalization, case folding or separator folding. `isEqual(to:)` compares `Path`, `Path.Unique` and `Path.Small` with each other.
