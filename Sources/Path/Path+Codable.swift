@@ -1,4 +1,4 @@
-#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+#if !hasFeature(Embedded) && PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
 
     /// A path in a persisted format is its text, held to ``Path/Protocol/init(validating:)``. A path the system hands
     /// back may not survive this, since it may hold code units that aren't text: that stays a matter of its code units.
