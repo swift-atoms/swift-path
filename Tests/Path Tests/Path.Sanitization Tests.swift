@@ -1,14 +1,16 @@
 import Path
 import Testing
 
-extension Path {
+enum `Path Tests` {}
+
+extension `Path Tests` {
     @Suite
     struct Sanitization {
         @Suite struct Sanitized {}
     }
 }
 
-extension Path.Sanitization.Sanitized {
+extension `Path Tests`.Sanitization.Sanitized {
     @Test
     func `Alphanumerics are retained`() {
         #expect(Path.sanitized(from: "abcXYZ123") == "abcXYZ123")

@@ -2,7 +2,9 @@ import Foundation
 import Path_Foundation_Integration
 import Testing
 
-extension Path {
+enum `Path Tests` {}
+
+extension `Path Tests` {
     @Suite struct `Foundation URL` {
         @Suite struct Unit {}
         @Suite struct `Edge Case` {}
@@ -19,23 +21,23 @@ extension Path {
     }
 }
 
-extension Path.`Foundation URL`.Unit {
+extension `Path Tests`.`Foundation URL`.Unit {
     @Test func `a file URL becomes its path and back`() throws {
-        let url = URL(filePath: Path.`Foundation URL`.file)
+        let url = URL(filePath: `Path Tests`.`Foundation URL`.file)
         let path = try Path(url)
-        #expect(path.string == Path.`Foundation URL`.file)
+        #expect(path.string == `Path Tests`.`Foundation URL`.file)
         #expect(URL(path) == url)
     }
 }
 
-extension Path.`Foundation URL`.`Edge Case` {
+extension `Path Tests`.`Foundation URL`.`Edge Case` {
     @Test func `a folder URL's trailing separator is dropped`() throws {
-        let url = URL(filePath: Path.`Foundation URL`.folder, directoryHint: .isDirectory)
-        #expect(try Path(url).string == Path.`Foundation URL`.folder)
+        let url = URL(filePath: `Path Tests`.`Foundation URL`.folder, directoryHint: .isDirectory)
+        #expect(try Path(url).string == `Path Tests`.`Foundation URL`.folder)
     }
 
     @Test func `the root stays the root`() throws {
-        let url = URL(filePath: Path.`Foundation URL`.root, directoryHint: .isDirectory)
-        #expect(try Path(url).string == Path.`Foundation URL`.root)
+        let url = URL(filePath: `Path Tests`.`Foundation URL`.root, directoryHint: .isDirectory)
+        #expect(try Path(url).string == `Path Tests`.`Foundation URL`.root)
     }
 }
