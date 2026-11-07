@@ -7,13 +7,13 @@ import Testing
     @Suite("Path × Ownership.Borrow")
     struct Path_Ownership_Tests {
 
-        @Test("Path conforms to Ownership.Borrow.Protocol")
-        func borrowProtocolConformance() {
+        @Test
+        func `Path conforms to Ownership.Borrow.Protocol`() {
             requireBorrowProtocol(Path.self)
         }
 
-        @Test("Path's borrowed representation is Path.Borrowed")
-        func borrowedRepresentation() {
+        @Test
+        func `Path's borrowed representation is Path.Borrowed`() {
             let type: Path.Borrowed.Type = resolveBorrowedType(Path.self)
             _ = type
         }

@@ -1,5 +1,3 @@
-// A literal is text held to `init(validating:)`. Windows rewrites separators in text, so its conformance sits with that
-// rule in Windows 32 Kernel File.
 #if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD))
 
     extension Path: ExpressibleByStringLiteral {
