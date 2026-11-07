@@ -62,3 +62,61 @@
     }
 
 #endif
+
+#if !hasFeature(Embedded) && PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+
+    /// A path in a persisted format is its text, held to ``Path/Protocol/init(validating:)``. A path the system hands
+    /// back may not survive this, since it may hold code units that aren't text: that stays a matter of its code units.
+    extension Path: Swift::Codable {
+
+        public init(from decoder: any Swift::Decoder) throws {
+            try self.init(validating: try decoder.singleValueContainer().decode(Swift::String.self))
+        }
+
+        public func encode(to encoder: any Swift::Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(string)
+        }
+    }
+
+#endif
+
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD))
+
+    extension Path: ExpressibleByStringLiteral {
+
+        @inlinable
+        public init(stringLiteral value: Swift::String) {
+            do throws(Path.Error) {
+                try self.init(validating: value)
+            } catch {
+                fatalError("Invalid path literal: \(value) (\(error))")
+            }
+        }
+    }
+
+    /// Interpolated text is a path by the same rule as a plain literal.
+    extension Path: ExpressibleByStringInterpolation {}
+
+#endif
+
+#if PATH_AVAILABLE && (os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows))
+    extension Path {
+
+        public static func sanitized(from source: Swift::String) -> Swift::String {
+            var sanitized = ""
+            sanitized.reserveCapacity(source.count)
+            for character in source {
+                if character.isLetter || character.isNumber
+                    || character == "_" || character == "-" || character == "."
+                {
+                    sanitized.append(character)
+                } else {
+                    sanitized.append("_")
+                }
+            }
+            return sanitized
+        }
+    }
+
+#endif
