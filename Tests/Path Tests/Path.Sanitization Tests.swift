@@ -6,8 +6,11 @@ enum `Path Tests` {}
 extension `Path Tests` {
     @Suite
     struct Sanitization {
-        @Suite struct Sanitized {}
     }
+}
+
+extension `Path Tests`.Sanitization {
+    @Suite struct Sanitized {}
 }
 
 extension `Path Tests`.Sanitization.Sanitized {
