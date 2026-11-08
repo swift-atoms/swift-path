@@ -3,7 +3,7 @@ import Testing
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD) || os(Windows)
 
-    @Suite("Path.Protocol")
+    @Suite
     struct Path_Protocol_Tests {
 
         @Test
@@ -85,7 +85,7 @@ import Testing
         }
     }
 
-    @Suite("Path.Unique")
+    @Suite
     struct Path_Unique_Tests {
 
         @Test
@@ -114,7 +114,7 @@ import Testing
         }
     }
 
-    @Suite("Path.Small")
+    @Suite
     struct Path_Small_Tests {
 
         @Test

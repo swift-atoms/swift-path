@@ -3,7 +3,7 @@
     import Path
     import Testing
 
-    @Suite("Path.Canonical × Error")
+    @Suite
     struct Path_Tests {
 
         @Test

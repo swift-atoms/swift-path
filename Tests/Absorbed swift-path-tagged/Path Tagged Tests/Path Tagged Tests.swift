@@ -4,7 +4,7 @@
     import Tagged
     import Testing
 
-    @Suite("Path × Tagged")
+    @Suite
     struct Path_Tests {
 
         enum TestTag {}
