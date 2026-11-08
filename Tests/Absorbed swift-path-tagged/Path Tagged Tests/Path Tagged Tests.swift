@@ -7,7 +7,7 @@
     @Suite
     struct Path_Tests {
 
-        enum TestTag {}
+        fileprivate enum TestTag {}
 
         @Test
         func `copying a string view preserves the path length`() {
