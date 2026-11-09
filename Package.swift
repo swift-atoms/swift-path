@@ -107,6 +107,7 @@ let package = Package(
         .testTarget(
             name: "Path Tests",
             dependencies: [
+                .product(name: "Binary", package: "swift-binary"),
                 .product(name: "Ownership", package: "swift-ownership"),
                 .target(name: "Path"),
                 .target(name: "Path Test Support"),
